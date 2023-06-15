@@ -12,7 +12,7 @@ import DatabaseFile from './entities/databaseFile.entity';
 @Module({
   imports: [
     TelegrafModule.forRootAsync({
-      imports: [AppUpdate ,ConfigModule],
+      imports: [DatabaseFilesService, AppUpdate ,ConfigModule],
       useFactory: (configService: ConfigService) => ({
         token: configService.get<string>('BOT_TOKEN'),
         launchOptions: {
@@ -33,6 +33,7 @@ import DatabaseFile from './entities/databaseFile.entity';
       database: env.POSTGRES_DATABASE,
       autoLoadEntities : true
     }),
+    DatabaseFilesService
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseFilesService],
