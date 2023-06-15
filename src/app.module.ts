@@ -11,9 +11,8 @@ import DatabaseFile from './entities/databaseFile.entity';
 
 @Module({
   imports: [
-    AppUpdate,
     TelegrafModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [AppUpdate, ConfigModule],
       useFactory: (configService: ConfigService) => ({
         token: configService.get<string>('BOT_TOKEN'),
         launchOptions: {
@@ -23,7 +22,7 @@ import DatabaseFile from './entities/databaseFile.entity';
           }
         }
       }),
-      inject: [ConfigService],
+      inject: [ConfigService, DatabaseFilesService],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
