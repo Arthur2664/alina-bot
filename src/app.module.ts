@@ -11,8 +11,9 @@ import DatabaseFile from './entities/databaseFile.entity';
 
 @Module({
   imports: [
+    AppUpdate,
     TelegrafModule.forRootAsync({
-      imports: [AppUpdate ,ConfigModule],
+      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         token: configService.get<string>('BOT_TOKEN'),
         launchOptions: {
