@@ -1,11 +1,25 @@
 import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
-import DatabaseFile from 'src/entities/databaseFile.entity';
-import { Repository } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Readable } from 'stream';
 import { Input } from 'telegraf';
 import { InputFile } from 'telegraf/typings/core/types/typegram';
  
+
+@Entity()
+class DatabaseFile {
+  @PrimaryGeneratedColumn()
+  public id: number;
+ 
+  @Column()
+  filename: string;
+ 
+  @Column({
+    type: 'bytea',
+  })
+  data: Uint8Array;
+}
+
 @Injectable()
 class DatabaseFilesService {
   constructor(
