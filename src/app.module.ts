@@ -33,7 +33,6 @@ import DatabaseFile from './entities/databaseFile.entity';
       database: env.POSTGRES_DATABASE,
       autoLoadEntities : true
     }),
-    DatabaseFilesService
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseFilesService],
