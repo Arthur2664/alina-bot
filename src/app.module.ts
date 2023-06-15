@@ -36,5 +36,6 @@ import DatabaseFile from './entities/databaseFile.entity';
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseFilesService],
+  exports: [DatabaseFilesService]
 })
 export class AppModule {}
