@@ -9,9 +9,14 @@ import {
 import { Context } from 'telegraf';
 const axios = require('axios');
 import * as fs from 'node:fs';
+import DatabaseFilesService from './services/databaseFiles.service';
   
   @Update()
   export class AppUpdate {
+    constructor(private readonly databaseFilesService: DatabaseFilesService,) {
+        
+    }
+
     @Start()
     async start(@Ctx() ctx: Context) {
       await ctx.reply('Welcome');
@@ -32,15 +37,19 @@ import * as fs from 'node:fs';
       await ctx.reply('Hey there');
     }
 
+    @Hears('photo')
+    async hearsPhoto(@Ctx() ctx: Context) {
+        const file = await this.databaseFilesService.getFile();
+        await ctx.sendPhoto(file);
+    }
+
     @On('photo')
     async onPhoto(@Ctx() ctx: any) {
         const fileId = ctx.message.photo.pop().file_id
 		  ctx.telegram.getFileLink(fileId).then(url => {    
-			  axios({url, responseType: 'stream'}).then(response => {
+			  axios({url, responseType: 'arraybuffer'}).then(response => {
 				  return new Promise(() => {
-					  response.data.pipe(fs.createWriteStream(`photos/${ctx.update.message.from.id}.jpg`))
-								  .on('finish', async () =>  await ctx.reply('👍'))
-								  .on('error', async e => await ctx.reply('Fail!'))
+                    this.databaseFilesService.uploadDatabaseFile(response.data, fileId);
 						  });
 					  })
 		  })

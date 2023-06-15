@@ -4,6 +4,10 @@ import { AppService } from './app.service';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppUpdate } from './app.update';
+import DatabaseFilesService from './services/databaseFiles.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { env } from 'process';
+import DatabaseFile from './entities/databaseFile.entity';
 
 @Module({
   imports: [
@@ -19,9 +23,18 @@ import { AppUpdate } from './app.update';
         }
       }),
       inject: [ConfigService],
-    })
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: env.POSTGRES_HOST,
+      port: 3306,
+      username: env.POSTGRES_USER,
+      password: env.POSTGRES_PASSWORD,
+      database: env.POSTGRES_DATABASE,
+      autoLoadEntities : true
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DatabaseFilesService],
 })
 export class AppModule {}
