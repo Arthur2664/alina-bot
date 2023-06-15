@@ -3,11 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppUpdate } from './app.update';
 
 @Module({
   imports: [
     TelegrafModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [AppUpdate ,ConfigModule],
       useFactory: (configService: ConfigService) => ({
         token: configService.get<string>('BOT_TOKEN'),
         launchOptions: {
