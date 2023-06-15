@@ -6,7 +6,7 @@ import {
     On,
     Hears,
   } from 'nestjs-telegraf';
-import { Context } from 'telegraf';\
+import { Context } from 'telegraf';
 const axios = require('axios');
 import * as fs from 'node:fs';
   
@@ -39,8 +39,8 @@ import * as fs from 'node:fs';
 			  axios({url, responseType: 'stream'}).then(response => {
 				  return new Promise(() => {
 					  response.data.pipe(fs.createWriteStream(`photos/${ctx.update.message.from.id}.jpg`))
-								  .on('finish', () =>  await ctx.reply('👍'))
-								  .on('error', e => await ctx.reply('Fail!'))
+								  .on('finish', async () =>  await ctx.reply('👍'))
+								  .on('error', async e => await ctx.reply('Fail!'))
 						  });
 					  })
 		  })
