@@ -6,7 +6,9 @@ import {
     On,
     Hears,
   } from 'nestjs-telegraf';
-import { Context } from 'telegraf';
+import { Context } from 'telegraf';\
+const axios = require('axios');
+import * as fs from 'node:fs';
   
   @Update()
   export class AppUpdate {
@@ -21,7 +23,7 @@ import { Context } from 'telegraf';
     }
   
     @On('sticker')
-    async on(@Ctx() ctx: Context) {
+    async onSticker(@Ctx() ctx: Context) {
       await ctx.reply('👍');
     }
   
@@ -29,4 +31,18 @@ import { Context } from 'telegraf';
     async hears(@Ctx() ctx: Context) {
       await ctx.reply('Hey there');
     }
+
+    @On('photo')
+    async onPhoto(@Ctx() ctx: any) {
+        const fileId = ctx.message.photo.pop().file_id
+		  ctx.telegram.getFileLink(fileId).then(url => {    
+			  axios({url, responseType: 'stream'}).then(response => {
+				  return new Promise(() => {
+					  response.data.pipe(fs.createWriteStream(`photos/${ctx.update.message.from.id}.jpg`))
+								  .on('finish', () =>  await ctx.reply('👍'))
+								  .on('error', e => await ctx.reply('Fail!'))
+						  });
+					  })
+		  })
+      }
   }
