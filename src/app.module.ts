@@ -12,7 +12,7 @@ import DatabaseFile from './entities/databaseFile.entity';
 @Module({
   imports: [
     TelegrafModule.forRootAsync({
-      imports: [DatabaseFilesService, AppUpdate ,ConfigModule],
+      imports: [AppUpdate ,ConfigModule],
       useFactory: (configService: ConfigService) => ({
         token: configService.get<string>('BOT_TOKEN'),
         launchOptions: {
