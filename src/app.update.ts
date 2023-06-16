@@ -51,7 +51,7 @@ export class AppUpdate {
 
   @Command('schedule')
   async schedule(@Ctx() ctx: Context) {
-    const job = new CronJob(`59 22 * * *`, async () => {
+    const job = new CronJob(`01 23 * * *`, async () => {
       const db = createKysely<Database>();
       const data = await db
         .selectFrom('image')
@@ -67,7 +67,9 @@ export class AppUpdate {
 
     const jobName = 'PostsToFans';
 
-    this.schedulerRegistry.deleteCronJob(jobName);
+    if(this.schedulerRegistry.getCronJob(jobName)){
+      this.schedulerRegistry.deleteCronJob(jobName);
+    }
     this.schedulerRegistry.addCronJob(jobName, job);
 
     job.start();
