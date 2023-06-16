@@ -50,7 +50,7 @@ export class AppUpdate {
   }
   @Command('schedule')
   async schedule(@Ctx() ctx: Context) {
-    const job = new CronJob(`14 23 * * *`, async () => {
+    const job = new CronJob(`16 23 * * *`, async () => {
       const db = createKysely<Database>();
       const data = await db
         .selectFrom('image')
