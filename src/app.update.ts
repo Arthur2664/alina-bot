@@ -60,6 +60,7 @@ interface Database {
 
     @On('message')
     async onPhoto(@Ctx() ctx: any) {
+      console.log(ctx)
       await ctx.reply(ctx);
 
 
