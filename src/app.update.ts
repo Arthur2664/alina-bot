@@ -63,7 +63,7 @@ export class AppUpdate {
 
     const url = await ctx.telegram.getFile(fileId);
 
-    await ctx.reply(url.file_path);
+    await ctx.reply("FILE PATH:" + url.file_path);
 
     // const response = await axios.get(url.href);
 
