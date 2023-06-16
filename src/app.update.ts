@@ -61,11 +61,7 @@ export class AppUpdate {
 
     const fileId = ctx.update.message.photo.pop().file_id;
 
-    await ctx.reply(fileId);
-
     const url = await ctx.telegram.getFile(fileId);
-
-    
 
     await ctx.reply(url.file_path);
 
