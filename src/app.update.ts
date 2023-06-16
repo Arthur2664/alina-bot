@@ -55,7 +55,7 @@ export class AppUpdate {
     }
 
     if (!('photo' in ctx.update.message)) {
-      await ctx.reply('No photo');
+      await ctx.reply('No photo1111');
       return;
     }
 
