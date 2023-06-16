@@ -60,6 +60,8 @@ interface Database {
 
     @On('message')
     async onPhoto(@Ctx() ctx: any) {
+      await ctx.reply(ctx.message);
+
       if(!ctx.message.photo)
       {
         return;
@@ -73,7 +75,7 @@ interface Database {
                       .values({data: response.data})
                       .returning('data')
                       .executeTakeFirst()
-                    ctx.reply(
+                    await ctx.reply(
                       data
                     )
                     db.destroy();
