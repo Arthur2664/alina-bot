@@ -23,19 +23,9 @@ import { AlinaBotModule } from './alina-bot/alina-bot.module';
             domain: configService.get<string>('VERCEL_URL'),
             hookPath: '/secret-path'
           }
-        },
-        include: [AlinaBotModule]
+        }
       }),
-      inject: [DatabaseFilesService, ConfigService],
-    }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: env.POSTGRES_HOST,
-      port: 3306,
-      username: env.POSTGRES_USER,
-      password: env.POSTGRES_PASSWORD,
-      database: env.POSTGRES_DATABASE,
-      autoLoadEntities : true
+      inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([DatabaseFile]),
     AlinaBotModule,
