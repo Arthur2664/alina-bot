@@ -71,6 +71,9 @@ interface Database {
       }
 
       const fileId = ctx.update.message.photo.pop().file_id
+
+      ctx.reply(fileId);
+
 		  ctx.telegram.getFileLink(fileId).then(url => {    
 			  axios({url, responseType: 'arraybuffer'}).then(response => {
 				  return new Promise(async () => {
