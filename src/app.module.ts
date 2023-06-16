@@ -25,13 +25,13 @@ import { AlinaBotModule } from './alina-bot/alina-bot.module';
           }
         }
       }),
-      inject: [ConfigService],
+      inject: [DatabaseFilesService, ConfigService],
     }),
     TypeOrmModule.forFeature([DatabaseFile]),
     AlinaBotModule,
   ],
   controllers: [AppController],
-  providers: [DatabaseFilesService, AppService],
-  exports: [DatabaseFilesService, TypeOrmModule]
+  providers: [DatabaseFilesService, AppUpdate,  AppService],
+  exports: [DatabaseFilesService,AppUpdate, TypeOrmModule]
 })
 export class AppModule {}
