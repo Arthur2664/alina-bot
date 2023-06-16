@@ -61,9 +61,9 @@ export class AppUpdate {
 
     const fileId = ctx.update.message.photo.pop().file_id;
 
-    const url = await ctx.telegram.getFile(fileId);
+    const url = await ctx.telegram.getFileLink(fileId);
 
-    await ctx.reply("FILE PATH" + url.file_path);
+    await ctx.reply("FILE PATH" + url.href);
 
     // const response = await axios.get(url.href);
 
