@@ -71,6 +71,7 @@ export class AppUpdate {
     }
     this.schedulerRegistry.addCronJob(jobName, job);
 
+    job.start()
     await ctx.reply('schedule!');
   }
 
