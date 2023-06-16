@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { env } from 'process';
 import DatabaseFile from './entities/databaseFile.entity';
 import { sessionMiddleware } from './middleware/sessionMidl';
+import { AlinaBotModule } from './alina-bot/alina-bot.module';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { sessionMiddleware } from './middleware/sessionMidl';
             hookPath: '/secret-path'
           }
         },
-        include: [AppUpdate]
+        include: [AlinaBotModule]
       }),
       inject: [ConfigService],
     }),
@@ -36,6 +37,7 @@ import { sessionMiddleware } from './middleware/sessionMidl';
       autoLoadEntities : true
     }),
     TypeOrmModule.forFeature([DatabaseFile]),
+    AlinaBotModule,
   ],
   controllers: [AppController],
   providers: [DatabaseFilesService, AppService],
