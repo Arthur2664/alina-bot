@@ -19,11 +19,10 @@ import { sessionMiddleware } from './middleware/sessionMidl';
         launchOptions: {
           webhook: {
             domain: configService.get<string>('VERCEL_URL'),
-            hookPath: '/secret-path',
-            middlewares: [sessionMiddleware]
+            hookPath: '/secret-path'
           }
         },
-        include: []
+        include: [AppUpdate]
       }),
       inject: [ConfigService],
     }),
