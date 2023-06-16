@@ -59,12 +59,17 @@ interface Database {
     }
 
     @On('message')
-    async onPhoto(@Ctx() ctx: any) {
-      console.log(ctx)
-      await ctx.reply(ctx);
+    async onPhoto(@Ctx() ctx: Context) {
+      if (!('message' in ctx.update)) {
+        return;
+      }
+
+      if(!('photo' in ctx.update.message)){
+        return;
+      }
 
 
-      if(!ctx.update.message.photo)
+      if(ctx.update.message && !ctx.update.message.photo)
       {
         return;
       }
@@ -78,7 +83,7 @@ interface Database {
                       .returning('data')
                       .executeTakeFirst()
                     await ctx.reply(
-                      data
+                      data.toString()
                     )
                     db.destroy();
 						  });
