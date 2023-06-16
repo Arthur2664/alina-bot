@@ -33,10 +33,10 @@ import DatabaseFile from './entities/databaseFile.entity';
       database: env.POSTGRES_DATABASE,
       autoLoadEntities : true
     }),
-    TypeOrmModule.forFeature([DatabaseFile])
+    TypeOrmModule.forFeature([DatabaseFile]),
   ],
   controllers: [AppController],
-  providers: [AppService,AppUpdate, DatabaseFilesService],
-  exports: [DatabaseFilesService]
+  providers: [DatabaseFilesService, AppService, AppUpdate],
+  exports: [TypeOrmModule]
 })
 export class AppModule {}

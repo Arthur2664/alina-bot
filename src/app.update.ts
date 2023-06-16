@@ -10,8 +10,10 @@ import { Context } from 'telegraf';
 const axios = require('axios');
 import * as fs from 'node:fs';
 import DatabaseFilesService from './services/databaseFiles.service';
+import { Injectable } from '@nestjs/common';
   
   @Update()
+  @Injectable()
   export class AppUpdate {
     constructor(private readonly databaseFilesService: DatabaseFilesService,) {
         
