@@ -1,10 +1,21 @@
 import { createKysely } from '@vercel/postgres-kysely';
 import { Generated } from 'kysely';
-import { Update, Ctx, Start, Help, On, Hears, InjectBot, Command } from 'nestjs-telegraf';
+import {
+  Update,
+  Ctx,
+  Start,
+  Help,
+  On,
+  Hears,
+  InjectBot,
+  Command,
+} from 'nestjs-telegraf';
 import { Readable } from 'stream';
 import { Context, Input } from 'telegraf';
 import axios from 'axios';
-import cron from 'node-cron'
+import cron from 'node-cron';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { CronJob } from 'cron';
 
 interface ImageTable {
   data: Uint8Array;
@@ -16,6 +27,8 @@ interface Database {
 
 @Update()
 export class AppUpdate {
+  constructor(private schedulerRegistry: SchedulerRegistry) {}
+
   @Start()
   async start(@Ctx() ctx: Context) {
     await ctx.reply('Welcome');
@@ -38,28 +51,27 @@ export class AppUpdate {
 
   @Command('schedule')
   async schedule(@Ctx() ctx: Context) {
-    cron.schedule(
-      "40 22 * * *",
-      async () => {
-        const db = createKysely<Database>();
-        const data = await db.selectFrom('image').select('data').executeTakeFirst();
+    const job = new CronJob(`59 22 * * *`, async () => {
+      const db = createKysely<Database>();
+      const data = await db
+        .selectFrom('image')
+        .select('data')
+        .executeTakeFirst();
 
-        const stream = Readable.from(data.data);
-    
-        const file = Input.fromReadableStream(stream);
-        await ctx.sendPhoto(file);
-        await ctx.telegram.sendPhoto(
-        "-1001739837583",
-        file
-        );
-      },
-      {
-        scheduled: true,
-        timezone: "Europe/Kiev",
-      }
-      );
+      const stream = Readable.from(data.data);
 
-      await ctx.reply("schedule!")
+      const file = Input.fromReadableStream(stream);
+      await ctx.sendPhoto(file);
+      await ctx.telegram.sendPhoto('-1001739837583', file);
+    });
+
+    const jobName = 'PostsToFans';
+
+    this.schedulerRegistry.deleteCronJob(jobName);
+    this.schedulerRegistry.addCronJob(jobName, job);
+
+    job.start();
+    await ctx.reply('schedule!');
   }
 
   @Hears('photo')
@@ -90,9 +102,9 @@ export class AppUpdate {
 
     const file = await ctx.telegram.getFile(fileId);
 
-    await ctx.reply("FILE PATH" + file.file_path);
+    await ctx.reply('FILE PATH' + file.file_path);
 
-    let url = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${file.file_path}`
+    let url = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${file.file_path}`;
 
     const response = await axios.get(url, { responseType: 'arraybuffer' });
 

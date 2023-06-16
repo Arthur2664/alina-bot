@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppUpdate } from './app.update';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TelegrafModule.forRootAsync({
       imports: [AppUpdate, ConfigModule],
       useFactory: (configService: ConfigService) => ({
