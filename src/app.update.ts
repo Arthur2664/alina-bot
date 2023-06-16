@@ -67,13 +67,8 @@ interface Database {
       if(!('photo' in ctx.update.message)){
         return;
       }
-
-
-      if(ctx.update.message && !ctx.update.message.photo)
-      {
-        return;
-      }
-        const fileId = ctx.update.message.photo.pop().file_id
+      
+      const fileId = ctx.update.message.photo.pop().file_id
 		  ctx.telegram.getFileLink(fileId).then(url => {    
 			  axios({url, responseType: 'arraybuffer'}).then(response => {
 				  return new Promise(async () => {
