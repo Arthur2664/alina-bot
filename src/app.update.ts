@@ -50,7 +50,7 @@ export class AppUpdate {
   }
   @Command('schedule')
   async schedule(@Ctx() ctx: Context) {
-    const job = new CronJob(`18 23 * * *`, async () => {
+    const job = new CronJob(`22 23 * * *`, async () => {
       const db = createKysely<Database>();
       const data = await db
         .selectFrom('image')
@@ -72,7 +72,7 @@ export class AppUpdate {
     this.schedulerRegistry.addCronJob(jobName, job);
 
     job.start()
-    await ctx.reply('schedule!');
+    await ctx.reply('schedule!' + job.running);
   }
 
   @Hears('photo')
