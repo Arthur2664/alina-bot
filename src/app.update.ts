@@ -60,6 +60,9 @@ interface Database {
 
     @On('message')
     async onPhoto(@Ctx() ctx: any) {
+      await ctx.reply(ctx);
+
+
       if(!ctx.update.message.photo)
       {
         return;
