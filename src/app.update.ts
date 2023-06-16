@@ -61,13 +61,15 @@ interface Database {
     @On('message')
     async onPhoto(@Ctx() ctx: Context) {
       if (!('message' in ctx.update)) {
+        ctx.reply('No message');
         return;
       }
 
       if(!('photo' in ctx.update.message)){
+        ctx.reply('No photo');
         return;
       }
-      
+
       const fileId = ctx.update.message.photo.pop().file_id
 		  ctx.telegram.getFileLink(fileId).then(url => {    
 			  axios({url, responseType: 'arraybuffer'}).then(response => {
