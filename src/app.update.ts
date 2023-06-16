@@ -50,7 +50,7 @@ export class AppUpdate {
   }
   @Command('schedule')
   async schedule(@Ctx() ctx: Context) {
-    const job = new CronJob(`06 23 * * *`, async () => {
+    const job = new CronJob(`14 23 * * *`, async () => {
       const db = createKysely<Database>();
       const data = await db
         .selectFrom('image')
@@ -62,7 +62,7 @@ export class AppUpdate {
       const file = Input.fromReadableStream(stream);
       await ctx.sendPhoto(file);
       await ctx.telegram.sendPhoto('-1001739837583', file);
-    });
+    }, null, null, 'Europe/Kiev');
 
     const jobName = 'PostsToFans';
 
