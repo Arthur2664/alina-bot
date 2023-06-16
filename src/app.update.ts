@@ -55,7 +55,7 @@ export class AppUpdate {
    
   }
 
-  @Cron(`40 23 * * *`)
+  @Cron(`42 23 * * *`, {timeZone: 'Europe/Kiev'})
   async runCronEvery30Seconds() {
     const db = createKysely<Database>();
     const data = await db
