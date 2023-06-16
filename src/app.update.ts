@@ -49,6 +49,9 @@ export class AppUpdate {
 
   @On('message')
   async onPhoto(@Ctx() ctx: Context) {
+
+    await ctx.reply('1');
+
     if (!('message' in ctx.update)) {
       await ctx.reply('No message');
       return;
