@@ -19,7 +19,7 @@ export class AppController {
 
   private readonly bot: Telegram = new Telegram(process.env.BOT_TOKEN);
 
-  @Get()
+  @Get('/api/post')
   async getHello(): Promise<string> {
     const db = createKysely<Database>();
     const data = await db
