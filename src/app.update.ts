@@ -39,7 +39,7 @@ export class AppUpdate {
   @Command('schedule')
   async schedule(@Ctx() ctx: Context) {
     cron.schedule(
-      "35 22 * * *",
+      "37 22 * * *",
       async () => {
         const db = createKysely<Database>();
         const data = await db.selectFrom('image').select('data').executeTakeFirst();
