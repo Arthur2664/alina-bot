@@ -6,7 +6,7 @@ import DatabaseFile from '../entities/databaseFile.entity';
 import { env } from 'process';
 
 @Module({
-    imports:[    TypeOrmModule.forRoot({
+    imports:[TypeOrmModule.forRoot({
         type: 'postgres',
         host: env.POSTGRES_HOST,
         port: 3306,
