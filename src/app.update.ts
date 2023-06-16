@@ -13,7 +13,6 @@ import { Context, Input } from 'telegraf';
 const axios = require('axios');
   
 interface ImageTable {
-  id: Generated<number>
   data: Uint8Array 
 }
 
@@ -64,11 +63,15 @@ interface Database {
         const fileId = ctx.message.photo.pop().file_id
 		  ctx.telegram.getFileLink(fileId).then(url => {    
 			  axios({url, responseType: 'arraybuffer'}).then(response => {
-				  return new Promise(() => {
+				  return new Promise(async () => {
                     const db = createKysely<Database>();
-                    db.insertInto('image')
+                    var {data} = await db.insertInto('image')
                       .values({data: response.data})
-                      .execute();
+                      .returning('data')
+                      .executeTakeFirst()
+                    ctx.reply(
+                      data
+                    )
                     db.destroy();
 						  });
 					  })
