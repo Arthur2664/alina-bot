@@ -20,7 +20,8 @@ import DatabaseFile from './entities/databaseFile.entity';
             domain: configService.get<string>('VERCEL_URL'),
             hookPath: '/secret-path',
           }
-        }
+        },
+        include: [AppModule]
       }),
       inject: [ConfigService],
     }),
