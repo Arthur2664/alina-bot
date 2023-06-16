@@ -1,9 +1,10 @@
 import { createKysely } from '@vercel/postgres-kysely';
 import { Generated } from 'kysely';
-import { Update, Ctx, Start, Help, On, Hears, InjectBot } from 'nestjs-telegraf';
+import { Update, Ctx, Start, Help, On, Hears, InjectBot, Command } from 'nestjs-telegraf';
 import { Readable } from 'stream';
 import { Context, Input } from 'telegraf';
 import axios from 'axios';
+import cron from 'node-cron'
 
 interface ImageTable {
   data: Uint8Array;
@@ -33,6 +34,32 @@ export class AppUpdate {
   @Hears('hi')
   async hears(@Ctx() ctx: Context) {
     await ctx.reply('Hey there');
+  }
+
+  @Command('schedule')
+  async schedule(@Ctx() ctx: Context) {
+    cron.schedule(
+      "35 22 * * *",
+      async () => {
+        const db = createKysely<Database>();
+        const data = await db.selectFrom('image').select('data').executeTakeFirst();
+
+        const stream = Readable.from(data.data);
+    
+        const file = Input.fromReadableStream(stream);
+        await ctx.sendPhoto(file);
+        await ctx.telegram.sendPhoto(
+        "-1001739837583",
+        file
+        );
+      },
+      {
+        scheduled: true,
+        timezone: "Europe/Kiev",
+      }
+      );
+
+      await ctx.reply("schedule!")
   }
 
   @Hears('photo')

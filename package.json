@@ -30,6 +30,7 @@
     "https": "^1.0.0",
     "kysely": "^0.25.0",
     "nestjs-telegraf": "^2.6.3",
+    "node-cron": "^3.0.2",
     "pg": "^8.11.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
