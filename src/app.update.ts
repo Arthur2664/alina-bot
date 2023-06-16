@@ -10,7 +10,7 @@ import {
   } from 'nestjs-telegraf';
 import { Readable } from 'stream';
 import { Context, Input } from 'telegraf';
-const axios = require('axios');
+import axios from 'axios';
   
 interface ImageTable {
   data: Uint8Array 
@@ -74,20 +74,21 @@ interface Database {
 
       await ctx.reply(fileId);
 
-		  ctx.telegram.getFileLink(fileId).then(url => {    
-			  axios({url, responseType: 'arraybuffer'}).then(response => {
-				  return new Promise(async () => {
-                    const db = createKysely<Database>();
-                    var {data} = await db.insertInto('image')
-                      .values({data: response.data})
-                      .returning('data')
-                      .executeTakeFirst()
-                    await ctx.reply(
-                      data.toString()
-                    )
-                    db.destroy();
-						  });
-					  })
-		  })
+      const url =  await  ctx.telegram.getFileLink(fileId);
+
+      await ctx.reply(url.href);
+
+      const response = await axios.get(url.href)
+
+      const db = createKysely<Database>();
+      var {data} = await db.insertInto('image')
+        .values({data: response.data})
+        .returning('data')
+        .executeTakeFirst()
+      await ctx.reply(
+        data.toString()
+      )
+      db.destroy();
+               
       }
   }
