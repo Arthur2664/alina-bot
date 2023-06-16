@@ -48,9 +48,26 @@ export class AppUpdate {
   async hears(@Ctx() ctx: Context) {
     await ctx.reply('Hey there');
   }
+
+  @Command('send')
+  async send(@Ctx() ctx: Context) {
+    await ctx.reply('MY job')
+    const db = createKysely<Database>();
+    const data = await db
+      .selectFrom('image')
+      .select('data')
+      .executeTakeFirst();
+
+    const stream = Readable.from(data.data);
+
+    const file = Input.fromReadableStream(stream);
+    await ctx.telegram.sendPhoto('-1001739837583', file);
+  }
+
   @Command('schedule')
   async schedule(@Ctx() ctx: Context) {
     const job = new CronJob(`25 23 * * *`, async () => {
+      await ctx.reply('MY job')
       const db = createKysely<Database>();
       const data = await db
         .selectFrom('image')
@@ -60,7 +77,6 @@ export class AppUpdate {
       const stream = Readable.from(data.data);
 
       const file = Input.fromReadableStream(stream);
-      await ctx.sendPhoto(file);
       await ctx.telegram.sendPhoto('-1001739837583', file);
     }, null, null, 'Europe/Kiev');
 
