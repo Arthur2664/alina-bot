@@ -1,3 +1,5 @@
+import { createKysely } from '@vercel/postgres-kysely';
+import { Generated } from 'kysely';
 import {
     Update,
     Ctx,
@@ -6,17 +8,22 @@ import {
     On,
     Hears,
   } from 'nestjs-telegraf';
-import { Context } from 'telegraf';
+import { Readable } from 'stream';
+import { Context, Input } from 'telegraf';
 const axios = require('axios');
-import * as fs from 'node:fs';
-import DatabaseFilesService from './services/databaseFiles.service';
-import { Injectable } from '@nestjs/common';
   
+interface ImageTable {
+  id: Generated<number>
+  data: Uint8Array 
+}
+
+interface Database {
+  image: ImageTable
+}
+
+
   @Update()
   export class AppUpdate {
-    constructor(private readonly databaseFilesService: DatabaseFilesService,) {
-        
-    }
 
     @Start()
     async start(@Ctx() ctx: Context) {
@@ -40,8 +47,16 @@ import { Injectable } from '@nestjs/common';
 
     @Hears('photo')
     async hearsPhoto(@Ctx() ctx: Context) {
-        const file = await this.databaseFilesService.getFile();
+      const db = createKysely<Database>();
+      const data = await db.selectFrom('image')
+                    .select('data')
+                    .executeTakeFirst();
+
+      const stream = Readable.from(data.data);
+
+        const file = Input.fromReadableStream(stream);
         await ctx.sendPhoto(file);
+        db.destroy();
     }
 
     @On('photo')
@@ -50,7 +65,11 @@ import { Injectable } from '@nestjs/common';
 		  ctx.telegram.getFileLink(fileId).then(url => {    
 			  axios({url, responseType: 'arraybuffer'}).then(response => {
 				  return new Promise(() => {
-                    this.databaseFilesService.uploadDatabaseFile(response.data, fileId);
+                    const db = createKysely<Database>();
+                    db.insertInto('image')
+                      .values({data: response.data})
+                      .execute();
+                    db.destroy();
 						  });
 					  })
 		  })
