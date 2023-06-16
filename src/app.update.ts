@@ -27,7 +27,7 @@ interface Database {
 
 @Update()
 export class AppUpdate {
-  private readonly bot: Telegram = new Telegram(process.env.BOT_TOKEN);
+  
 
   constructor(private schedulerRegistry: SchedulerRegistry) {}
   @Start()
@@ -49,26 +49,7 @@ export class AppUpdate {
   async hears(@Ctx() ctx: Context) {
     await ctx.reply('Hey there');
   }
-
-  @Command('send')
-  async send(@Ctx() ctx: Context) {
-   
-  }
-
-  @Cron(`42 23 * * *`, {timeZone: 'Europe/Kiev'})
-  async runCronEvery30Seconds() {
-    const db = createKysely<Database>();
-    const data = await db
-      .selectFrom('image')
-      .select('data')
-      .executeTakeFirst();
-
-    const stream = Readable.from(data.data);
-
-    const file = Input.fromReadableStream(stream);
-    await this.bot.sendPhoto('-1001739837583', file);
-  }
-
+  
   @Command('schedule')
   async schedule(@Ctx() ctx: Context) {
     const job = new CronJob(`25 23 * * *`, async () => {
