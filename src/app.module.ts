@@ -18,6 +18,7 @@ import { AlinaBotModule } from './alina-bot/alina-bot.module';
       useFactory: (configService: ConfigService) => ({
         token: configService.get<string>('BOT_TOKEN'),
         launchOptions: {
+          dropPendingUpdates: true,
           webhook: {
             domain: configService.get<string>('VERCEL_URL'),
             hookPath: '/secret-path'
