@@ -12,6 +12,7 @@ import { AppUpdate } from './app.update';
       useFactory: (configService: ConfigService) => ({
         token: configService.get<string>('BOT_TOKEN'),
         launchOptions: {
+          dropPendingUpdates: true,
           webhook: {
             domain: configService.get<string>('VERCEL_URL'),
             hookPath: '/secret-path'

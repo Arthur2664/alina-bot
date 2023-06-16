@@ -49,16 +49,13 @@ export class AppUpdate {
 
   @On('message')
   async onPhoto(@Ctx() ctx: Context) {
-
-    await ctx.reply('1');
-
     if (!('message' in ctx.update)) {
       await ctx.reply('No message');
       return;
     }
 
     if (!('photo' in ctx.update.message)) {
-      await ctx.reply('No photo1111');
+      await ctx.reply('No photo');
       return;
     }
 
@@ -66,7 +63,7 @@ export class AppUpdate {
 
     const url = await ctx.telegram.getFile(fileId);
 
-    await ctx.reply("FILE PATH:");
+    await ctx.reply("FILE PATH" + url.file_path);
 
     // const response = await axios.get(url.href);
 
