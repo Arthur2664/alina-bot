@@ -13,6 +13,6 @@ async function bootstrap() {
     console.log(`setting webhook to ${process.env.VERCEL_URL}/secret-path`);
     await bot.telegram.setWebhook(`${process.env.VERCEL_URL}/secret-path`);
   app.use(bot.webhookCallback('/secret-path'));
-  await app.listen(3000);
+  await app.listen(3333);
 }
 bootstrap();
