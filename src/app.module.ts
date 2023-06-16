@@ -14,7 +14,7 @@ import { AlinaBotModule } from './alina-bot/alina-bot.module';
 @Module({
   imports: [
     TelegrafModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [AlinaBotModule, ConfigModule],
       useFactory: (configService: ConfigService) => ({
         token: configService.get<string>('BOT_TOKEN'),
         launchOptions: {
@@ -26,7 +26,7 @@ import { AlinaBotModule } from './alina-bot/alina-bot.module';
         },
         include: [AlinaBotModule]
       }),
-      inject: [ConfigService],
+      inject: [DatabaseFilesService, ConfigService],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -42,6 +42,6 @@ import { AlinaBotModule } from './alina-bot/alina-bot.module';
   ],
   controllers: [AppController],
   providers: [DatabaseFilesService, AppService],
-  exports: [TypeOrmModule]
+  exports: [DatabaseFilesService, TypeOrmModule]
 })
 export class AppModule {}

@@ -7,5 +7,6 @@ import DatabaseFile from '../entities/databaseFile.entity';
 @Module({
     imports:[TypeOrmModule.forFeature([DatabaseFile]),],
     providers: [DatabaseFilesService, AppUpdate],
+    exports:[DatabaseFilesService]
 })
 export class AlinaBotModule {}
