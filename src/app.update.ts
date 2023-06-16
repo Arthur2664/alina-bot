@@ -11,10 +11,10 @@ import {
   Command,
 } from 'nestjs-telegraf';
 import { Readable } from 'stream';
-import { Context, Input } from 'telegraf';
+import { Context, Input, Telegraf, Telegram } from 'telegraf';
 import axios from 'axios';
 import cron from 'node-cron';
-import { SchedulerRegistry } from '@nestjs/schedule';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 
 interface ImageTable {
@@ -27,8 +27,9 @@ interface Database {
 
 @Update()
 export class AppUpdate {
-  constructor(private schedulerRegistry: SchedulerRegistry) {}
+  private readonly bot: Telegram = new Telegram(process.env.BOT_TOKEN);
 
+  constructor(private schedulerRegistry: SchedulerRegistry) {}
   @Start()
   async start(@Ctx() ctx: Context) {
     await ctx.reply('Welcome');
@@ -51,7 +52,11 @@ export class AppUpdate {
 
   @Command('send')
   async send(@Ctx() ctx: Context) {
-    await ctx.reply('MY job')
+   
+  }
+
+  @Cron(`40 23 * * *`)
+  async runCronEvery30Seconds() {
     const db = createKysely<Database>();
     const data = await db
       .selectFrom('image')
@@ -61,7 +66,7 @@ export class AppUpdate {
     const stream = Readable.from(data.data);
 
     const file = Input.fromReadableStream(stream);
-    await ctx.telegram.sendPhoto('-1001739837583', file);
+    await this.bot.sendPhoto('-1001739837583', file);
   }
 
   @Command('schedule')
