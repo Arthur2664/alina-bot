@@ -13,7 +13,6 @@ import DatabaseFilesService from './services/databaseFiles.service';
 import { Injectable } from '@nestjs/common';
   
   @Update()
-  @Injectable()
   export class AppUpdate {
     constructor(private readonly databaseFilesService: DatabaseFilesService,) {
         

@@ -8,6 +8,7 @@ import DatabaseFilesService from './services/databaseFiles.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { env } from 'process';
 import DatabaseFile from './entities/databaseFile.entity';
+import { sessionMiddleware } from './middleware/sessionMidl';
 
 @Module({
   imports: [
@@ -19,9 +20,10 @@ import DatabaseFile from './entities/databaseFile.entity';
           webhook: {
             domain: configService.get<string>('VERCEL_URL'),
             hookPath: '/secret-path',
+            middlewares: [sessionMiddleware]
           }
         },
-        include: [AppModule]
+        include: []
       }),
       inject: [ConfigService],
     }),
@@ -37,7 +39,7 @@ import DatabaseFile from './entities/databaseFile.entity';
     TypeOrmModule.forFeature([DatabaseFile]),
   ],
   controllers: [AppController],
-  providers: [DatabaseFilesService, AppService, AppUpdate],
+  providers: [DatabaseFilesService, AppService],
   exports: [TypeOrmModule]
 })
 export class AppModule {}
