@@ -25,7 +25,7 @@ import { AlinaBotModule } from './alina-bot/alina-bot.module';
           }
         }
       }),
-      inject: [ConfigService],
+      inject: [DatabaseFilesService, ConfigService],
     }),
     TypeOrmModule.forFeature([DatabaseFile]),
     AlinaBotModule,
