@@ -1,6 +1,6 @@
 import { createKysely } from '@vercel/postgres-kysely';
 import { Generated } from 'kysely';
-import { Update, Ctx, Start, Help, On, Hears } from 'nestjs-telegraf';
+import { Update, Ctx, Start, Help, On, Hears, InjectBot } from 'nestjs-telegraf';
 import { Readable } from 'stream';
 import { Context, Input } from 'telegraf';
 import axios from 'axios';
@@ -61,19 +61,21 @@ export class AppUpdate {
 
     const fileId = ctx.update.message.photo.pop().file_id;
 
-    const url = await ctx.telegram.getFileLink(fileId);
+    const file = await ctx.telegram.getFile(fileId);
 
-    await ctx.reply("FILE PATH" + url.href);
+    await ctx.reply("FILE PATH" + file.file_path);
 
-    // const response = await axios.get(url.href);
+    let url = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${file.file_path}`
 
-    // const db = createKysely<Database>();
-    // var { data } = await db
-    //   .insertInto('image')
-    //   .values({ data: response.data })
-    //   .returning('data')
-    //   .executeTakeFirst();
-    // await ctx.reply(data.toString());
-    // db.destroy();
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+
+    const db = createKysely<Database>();
+    var { data } = await db
+      .insertInto('image')
+      .values({ data: response.data })
+      .returning('data')
+      .executeTakeFirst();
+    await ctx.reply(data.toString());
+    db.destroy();
   }
 }
