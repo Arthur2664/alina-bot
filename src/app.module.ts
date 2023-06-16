@@ -24,7 +24,7 @@ import { AlinaBotModule } from './alina-bot/alina-bot.module';
             hookPath: '/secret-path'
           }
         },
-        include: [AlinaBotModule, ConfigModule]
+        include: [AlinaBotModule]
       }),
       inject: [DatabaseFilesService, ConfigService],
     }),

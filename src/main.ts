@@ -10,6 +10,6 @@ async function bootstrap() {
 		bot.options.username = botInfo.username;
 		console.info("Server has initialized bot username using Webhook. ", botInfo.username);
   app.use(bot.webhookCallback('/secret-path'));
-  await app.listen(3333);
+  await app.listen(3000);
 }
 bootstrap();
