@@ -34,9 +34,9 @@ export class AppController {
       return 'Error!!!';
     }
 
-    db.deleteFrom('image').where('id', '=', data.id).executeTakeFirst()
+    await db.deleteFrom('image').where('id', '=', data.id).executeTakeFirst()
 
-    db.destroy();
+    await db.destroy();
     return 'SENT!!!';
   }
 }

@@ -95,6 +95,6 @@ export class AppUpdate {
       .returning('data')
       .executeTakeFirst();
     await ctx.reply(data.toString());
-    db.destroy();
+    await db.destroy();
   }
 }
