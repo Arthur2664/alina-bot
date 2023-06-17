@@ -82,8 +82,6 @@ export class AppUpdate {
 
     const file = await ctx.telegram.getFile(fileId);
 
-    await ctx.reply('FILE PATH' + file.file_path);
-
     let url = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${file.file_path}`;
 
     const response = await axios.get(url, { responseType: 'arraybuffer' });
@@ -94,7 +92,7 @@ export class AppUpdate {
       .values({ data: response.data })
       .returning('data')
       .executeTakeFirst();
-    await ctx.reply(data.toString());
+    await ctx.reply('Loaded photo!');
     await db.destroy();
   }
 }
