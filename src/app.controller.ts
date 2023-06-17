@@ -5,6 +5,7 @@ import { Input, Telegram } from 'telegraf';
 import { Readable } from 'stream';
 
 interface ImageTable {
+  id: number
   data: Uint8Array;
 }
 
@@ -21,7 +22,7 @@ export class AppController {
   @Get('/api/post')
   async getHello(): Promise<string> {
     const db = createKysely<Database>();
-    const data = await db.selectFrom('image').select('data').executeTakeFirst();
+    const data = await db.selectFrom('image').selectAll().executeTakeFirst();
 
     const stream = Readable.from(data.data);
 
@@ -33,7 +34,7 @@ export class AppController {
       return 'Error!!!';
     }
 
-    db.deleteFrom('image').where('data', '=', data.data).execute();
+    db.deleteFrom('image').where('id', '=', data.id).executeTakeFirst()
 
     db.destroy();
     return 'SENT!!!';
