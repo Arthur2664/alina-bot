@@ -56,14 +56,14 @@ export class AppUpdate {
     const data = await db.selectFrom('image').select('data').executeTakeFirst();
 
     if(!data){
-      ctx.reply("No Photo loaded!");
+      await ctx.reply("No Photo loaded!");
     }
 
     const stream = Readable.from(data.data);
 
     const file = Input.fromReadableStream(stream);
     await ctx.sendPhoto(file);
-    db.destroy();
+    await db.destroy();
   }
 
   @On('message')
