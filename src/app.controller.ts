@@ -24,6 +24,10 @@ export class AppController {
     const db = createKysely<Database>();
     const data = await db.selectFrom('image').selectAll().executeTakeFirst();
 
+    if(!data){
+      throw Error('No photo loaded');
+    }
+
     const stream = Readable.from(data.data);
 
     const file = Input.fromReadableStream(stream);
@@ -31,7 +35,7 @@ export class AppController {
     try {
       await this.bot.sendPhoto('-1001739837583', file);
     } catch (error) {
-      return 'Error!!!';
+      throw Error(error);
     }
 
     await db.deleteFrom('image').where('id', '=', data.id).executeTakeFirst()
