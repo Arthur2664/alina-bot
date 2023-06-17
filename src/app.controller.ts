@@ -4,7 +4,6 @@ import { createKysely } from '@vercel/postgres-kysely';
 import { Input, Telegram } from 'telegraf';
 import { Readable } from 'stream';
 
-
 interface ImageTable {
   data: Uint8Array;
 }
@@ -22,15 +21,21 @@ export class AppController {
   @Get('/api/post')
   async getHello(): Promise<string> {
     const db = createKysely<Database>();
-    const data = await db
-      .selectFrom('image')
-      .select('data')
-      .executeTakeFirst();
+    const data = await db.selectFrom('image').select('data').executeTakeFirst();
 
     const stream = Readable.from(data.data);
 
     const file = Input.fromReadableStream(stream);
-    await this.bot.sendPhoto('-1001739837583', file);
-    return "SENT!!!"
+
+    try {
+      await this.bot.sendPhoto('-1001739837583', file);
+    } catch (error) {
+      return 'Error!!!';
+    }
+
+    db.deleteFrom('image').where('data', '=', data.data).execute();
+
+    db.destroy();
+    return 'SENT!!!';
   }
 }

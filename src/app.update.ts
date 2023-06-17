@@ -49,38 +49,15 @@ export class AppUpdate {
   async hears(@Ctx() ctx: Context) {
     await ctx.reply('Hey there');
   }
-  
-  @Command('schedule')
-  async schedule(@Ctx() ctx: Context) {
-    const job = new CronJob(`25 23 * * *`, async () => {
-      await ctx.reply('MY job')
-      const db = createKysely<Database>();
-      const data = await db
-        .selectFrom('image')
-        .select('data')
-        .executeTakeFirst();
-
-      const stream = Readable.from(data.data);
-
-      const file = Input.fromReadableStream(stream);
-      await ctx.telegram.sendPhoto('-1001739837583', file);
-    }, null, null, 'Europe/Kiev');
-
-    const jobName = 'PostsToFans';
-
-    if(this.schedulerRegistry.doesExist('cron',jobName)){
-      this.schedulerRegistry.deleteCronJob(jobName);
-    }
-    this.schedulerRegistry.addCronJob(jobName, job);
-
-    job.start()
-    await ctx.reply('schedule!: ' + job.nextDate());
-  }
 
   @Hears('photo')
   async hearsPhoto(@Ctx() ctx: Context) {
     const db = createKysely<Database>();
     const data = await db.selectFrom('image').select('data').executeTakeFirst();
+
+    if(!data){
+      ctx.reply("No Photo loaded!");
+    }
 
     const stream = Readable.from(data.data);
 
